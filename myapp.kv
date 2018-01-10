@@ -1,0 +1,145 @@
+#:kivy 1.1.0
+#: import Window kivy.core.window.Window
+
+#1,1,1 white
+#1,1,0 yellow
+#1,0,0 red
+#0,0,0 black
+Root:
+    canvas.before:
+        Color:
+            #rgb: 1,0,0 #red
+            #rgba: 255,255,255,0
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'background.jpg'
+
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.size
+        pos: root.pos
+        #canvas:
+        #    Color:
+        #        rgb: 1, 1, 1 #white
+        #    Rectangle:
+        #        size: self.size
+
+        # 2 half views
+        BoxLayout:
+            id: twohalfviews
+            orientation: 'horizontal'
+            #size_hint_y: 0.7
+            size: root.size
+            pos: root.pos
+
+            # 1st Half view for list of players
+            BoxLayout:
+                size_hint_x: 0.3
+                size_hint_y: 1
+                padding: [5,5,5,5]
+                #canvas:
+                #    Color:
+                #        rgb: 1, 0, 0 #red
+                #    Rectangle:
+                #        size: self.size
+                #        pos: self.pos
+                ScrollView:
+                    id: scrlv_players
+                    #size_hint_x: 0.8
+                    size_hint: (1, None)
+                    #size: (Window.width, Window.height)
+                    height: self.parent.height
+                    pos_hint: {'left':1, 'top':1 , 'bottom': 1}
+                    padding: [5,5,5,5]
+                    PlayerBoxLayout:
+                        id: playerdisplay
+
+            # 2nd Half view for scrolling results
+            BoxLayout:
+                id: secondhalfview
+                size_hint_x: 0.7
+                padding: [5,5,5,5]
+                canvas.before:
+                    #Color:
+                    #    rgb: 0, 0, 0,1 #yellow
+                    Rectangle:
+                        id: canvasrect
+                        size: self.size
+                        pos: self.pos
+                ScrollView:
+                    id: scrlv
+                    size_hint_x: 0.8
+                    pos_hint: {'center_x':.5, 'center_y': .5}
+                    Label:
+                        id: rst_doc
+                        text: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                        text_size: self.width,None
+                        font_size: '12sp'
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        color: [0,0,0,1] #red
+                        font_name: 'monaco.ttf'
+
+        # Bunches of buttons to run
+        BoxLayout:
+            size_hint_y: None
+            #size_hint_y: 0.1
+            height: 60
+
+            # Site button
+            Button:
+                id: site_button
+                text: 'Site'
+                on_release: root.sitedropdown.open(self)
+
+            # Sport button
+            Button:
+                id: sport_button
+                text: 'Sport'
+                on_release: root.sportdropdown.open(self)
+
+            # Max Lineup button
+            Button:
+                id: max_lineup_button
+                text: 'Max Lineup'
+                on_release: root.maxlineupdropdown.open(self)
+
+        # Load CSV button
+        BoxLayout:
+            size_hint_y: None
+            #size_hint_y: 0.1
+            height: 60
+            Button:
+                id: load_csv_button
+                text: 'Load CSV'
+                on_release: root.show_load()
+
+        # GENERATE button
+        BoxLayout:
+            size_hint_y: None
+            #size_hint_y: 0.1
+            height: 120
+            Button:
+                id: generate_button
+                text: 'GENERATE'
+                on_release: root.show_output()
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+
+        BoxLayout:
+            size_hint_y: None
+            height: 60
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.path, filechooser.selection)

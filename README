@@ -1,0 +1,23 @@
+virtualenv -p /usr/local/bin/python2.7 virtualenv-pydfs
+pip freeze > requirements.txt
+
+brew install python
+brew reinstall --build-bottle sdl2 sdl2_image sdl2_ttf sdl2_mixer
+brew install sdl2 sdl2_image sdl2_ttf sdl2_mixer gstreamer
+brew upgrade gstreamer
+
+pip install Cython==0.26.1
+pip install -U kivy
+pip install -U pyinstaller
+pip install pydfs-lineup-optimizer
+
+python -m PyInstaller --name lineupOptGuiMac ../lineupOptGui/lineupmain.py
+git checkout -- .
+python -m PyInstaller -y --clean --windowed lineupOptGuiMac.spec
+
+dependencies are at:
+/usr/local/Cellar/sdl2_mixer/2.0.2_3
+
+cp -r ../lineupGuienv/Lib/site-packages/kivy/deps/glew virtualevn-pydfs/lib/python2.7/site-packages/kivy/deps/
+cp -r ../lineupGuienv/Lib/site-packages/kivy/deps/gstreamer virtualevn-pydfs/lib/python2.7/site-packages/kivy/deps/
+cp -r ../lineupGuienv/Lib/site-packages/kivy/deps/sdl2 virtualevn-pydfs/lib/python2.7/site-packages/kivy/deps/
