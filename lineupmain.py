@@ -18,6 +18,7 @@ from kivy.uix.checkbox import CheckBox
 from kivy.uix.textinput import TextInput
 from kivy.graphics import Color, Rectangle
 from kivy.clock import Clock
+from kivy.logger import Logger
 
 
 import os
@@ -149,6 +150,8 @@ class Root(FloatLayout):
                 player_to_lock.max_exposure=exposure
                 optimizer.add_player_to_lineup(player_to_lock)
 
+        for playerlog in optimizer.players:
+            Logger.info("optimizer:{}".format(playerlog))
         lineup_generator = optimizer.optimize(int(maxlineup))
         #For real
         outputtext='\n'
