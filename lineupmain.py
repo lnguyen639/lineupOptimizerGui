@@ -1,4 +1,5 @@
 from pydfs_lineup_optimizer import Site, Sport, get_optimizer
+from pulp.solvers import COIN_CMD
 import os
 import kivy
 import threading
@@ -150,9 +151,21 @@ class Root(FloatLayout):
                 player_to_lock.max_exposure=exposure
                 optimizer.add_player_to_lineup(player_to_lock)
 
-        for playerlog in optimizer.players:
-            Logger.info("optimizer:{}".format(playerlog))
-        lineup_generator = optimizer.optimize(int(maxlineup))
+        #For debugging, if needed
+        #for playerlog in optimizer.players:
+        #    Logger.info("optimizer:{}".format(playerlog))
+
+        import sys
+        if getattr(sys, 'frozen', False):
+            application_path = os.path.dirname(sys.executable)
+        elif __file__:
+            application_path = os.path.dirname(__file__)
+
+        #cbcpath = os.path.join(os.path.dirname(os.path.realpath(__file__)),'cbc')
+        cbcpath = os.path.join(application_path,'cbc')
+        Logger.info('cbc path is {}'.format(cbcpath))
+        solver = COIN_CMD(path=cbcpath)
+        lineup_generator = optimizer.optimize(int(maxlineup), solver=solver)
         #For real
         outputtext='\n'
         for lineup in lineup_generator:
