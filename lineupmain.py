@@ -161,8 +161,13 @@ class Root(FloatLayout):
         elif __file__:
             application_path = os.path.dirname(__file__)
 
-        #cbcpath = os.path.join(os.path.dirname(os.path.realpath(__file__)),'cbc')
-        cbcpath = os.path.join(application_path,'cbc')
+        if sys.platform == 'darwin':
+            cbcpath = os.path.join(application_path,'cbc')
+        elif sys.platform == 'win32':
+            cbcpath = os.path.join(application_path,'cbc.exe')
+        elif sys.platform == 'win64':
+            cbcpath = os.path.join(application_path,'cbc64.exe')
+
         Logger.info('cbc path is {}'.format(cbcpath))
         solver = COIN_CMD(path=cbcpath)
         lineup_generator = optimizer.optimize(int(maxlineup), solver=solver)
