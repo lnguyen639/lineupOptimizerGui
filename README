@@ -14,11 +14,14 @@ pip install pyenchant
 pip install pyobjc
 pip install pydfs-lineup-optimizer
 
+Edit pydfs-lineup-optimizer file for new solver
+
 dependencies are at:
 /usr/local/Cellar/sdl2_mixer/2.0.2_3
 
 
 pyinstaller -y --clean --windowed --name lineupOptGuiMacPkg --exclude-module _tkinter   --exclude-module Tkinter   --exclude-module enchant   --exclude-module twisted ../lineupOptGui/lineupmain.py
+git checkout -- .
 pyinstaller -y --clean --windowed lineupOptGuiMacPkg.spec
 
 Edit specs:
@@ -33,9 +36,11 @@ pip install kivy
 pip install --upgrade pyinstaller
 pip install pydfs-lineup-optimizer
 
+Edit pydfs-lineup-optimizer file for new solver
+
 python -m PyInstaller --name lineupOptimizerGuiWinPkg ..\lineupOptimizerGui\lineupmain.py
-python -m PyInstaller lineupOptimizerGuiWinPkg.spec
-python -m PyInstaller -y --clean --windowed lineupOptimizerGuiWinPkg.spec
+git checkout -- .
+python -m PyInstaller -y --clean --windowed --onefile lineupOptimizerGuiWinPkg.spec
 
 Edit specs:
 from kivy.deps import sdl2, glew
