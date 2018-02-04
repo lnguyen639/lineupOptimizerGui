@@ -164,9 +164,9 @@ class Root(FloatLayout):
         if sys.platform == 'darwin':
             cbcpath = os.path.join(application_path,'cbc')
         elif sys.platform == 'win32':
-            cbcpath = os.path.join(application_path,'cbc.exe')
+            cbcpath = os.path.join(application_path,'Cbc-2.7.5-win32-cl15icl11.1','bin','cbc.exe')
         elif sys.platform == 'win64':
-            cbcpath = os.path.join(application_path,'cbc64.exe')
+            cbcpath = os.path.join(application_path,'Cbc-2.7.5-win64-intel11.1','bin','cbc.exe')
 
         Logger.info('cbc path is {}'.format(cbcpath))
         solver = COIN_CMD(path=cbcpath)

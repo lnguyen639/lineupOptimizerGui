@@ -1,0 +1,1 @@
+-lm   -L/usr/local/lib/gcc/i386-apple-darwin9.6.1/4.3.3/x86_64 -L/usr/local/lib/gcc/i386-apple-darwin9.6.1/4.3.3/../../../x86_64 -L/usr/local/lib/gcc/i386-apple-darwin9.6.1/4.3.3 -L/usr/local/lib/gcc/i386-apple-darwin9.6.1/4.3.3/../../.. -lgfortranbegin -lgfortran -lgcc_s.10.5 -lSystem
