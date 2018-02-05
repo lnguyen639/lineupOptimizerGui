@@ -37,7 +37,7 @@ Root:
             BoxLayout:
                 size_hint_x: 0.3
                 size_hint_y: 1
-                padding: [5,5,5,5]
+                padding: [dp(5),dp(5),dp(5),dp(5)]
                 #canvas:
                 #    Color:
                 #        rgb: 1, 0, 0 #red
@@ -51,7 +51,7 @@ Root:
                     #size: (Window.width, Window.height)
                     height: self.parent.height
                     pos_hint: {'left':1, 'top':1 , 'bottom': 1}
-                    padding: [5,5,5,5]
+                    padding: [dp(5),dp(5),dp(5),dp(5)]
                     PlayerBoxLayout:
                         id: playerdisplay
 
@@ -59,7 +59,7 @@ Root:
             BoxLayout:
                 id: secondhalfview
                 size_hint_x: 0.7
-                padding: [5,5,5,5]
+                padding: [dp(5),dp(5),dp(5),dp(5)]
                 canvas.before:
                     #Color:
                     #    rgb: 0, 0, 0,1 #yellow
@@ -85,7 +85,7 @@ Root:
         BoxLayout:
             size_hint_y: None
             #size_hint_y: 0.1
-            height: 60
+            height: dp(30)
 
             # Site button
             Button:
@@ -109,7 +109,7 @@ Root:
         BoxLayout:
             size_hint_y: None
             #size_hint_y: 0.1
-            height: 60
+            height: dp(30)
             Button:
                 id: load_csv_button
                 text: 'Load CSV'
@@ -119,7 +119,7 @@ Root:
         BoxLayout:
             size_hint_y: None
             #size_hint_y: 0.1
-            height: 120
+            height: dp(60)
             Button:
                 id: generate_button
                 text: 'GENERATE'
@@ -135,7 +135,7 @@ Root:
 
         BoxLayout:
             size_hint_y: None
-            height: 60
+            height: dp(30)
             Button:
                 text: "Cancel"
                 on_release: root.cancel()

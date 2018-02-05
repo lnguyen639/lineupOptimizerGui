@@ -20,7 +20,7 @@ from kivy.uix.textinput import TextInput
 from kivy.graphics import Color, Rectangle
 from kivy.clock import Clock
 from kivy.logger import Logger
-
+from kivy.metrics import dp,sp
 
 import os
 
@@ -49,19 +49,19 @@ class Root(FloatLayout):
         super(Root,self).__init__()
         self.playersconfig = {}
         self.sitedropdown = DropDown(auto_width=False)
-        self.sitedropdown.width = 300
+        self.sitedropdown.width = dp(300)
         for site in ['DRAFTKINGS','FANDUEL','YAHOO','FANTASY_DRAFT']:
-            btn = Button(text=site,size_hint_y=None, auto_width=False, height=100)
-            btn.width = 300
+            btn = Button(text=site,size_hint_y=None, auto_width=False, height=dp(50))
+            btn.width = dp(300)
             btn.bind(on_release=lambda btn: self.sitedropdown.select(btn.text))
             self.sitedropdown.add_widget(btn)
         self.sitedropdown.bind(on_select=lambda instance, x: setattr(self.ids.site_button, 'text', x))
 
         self.sportdropdown = DropDown(auto_width=False)
-        self.sportdropdown.width = 300
+        self.sportdropdown.width = dp(300)
         for sport in ['BASKETBALL','']:
-            btn = Button(text=sport,size_hint_y=None, auto_width=False, height=100)
-            btn.width = 300
+            btn = Button(text=sport,size_hint_y=None, auto_width=False, height=dp(50))
+            btn.width = dp(300)
             #Hack to position button just right, remove if when enable more sports
             if sport != '':
                 btn.bind(on_release=lambda btn: self.sportdropdown.select(btn.text))
@@ -69,10 +69,10 @@ class Root(FloatLayout):
         self.sportdropdown.bind(on_select=lambda instance, x: setattr(self.ids.sport_button, 'text', x))
 
         self.maxlineupdropdown = DropDown(auto_width=False)
-        self.maxlineupdropdown.width = 300
+        self.maxlineupdropdown.width = dp(300)
         for i in range(1,11):
-            btn = Button(text=str(i),size_hint_y=None, auto_width=False, height=100)
-            btn.width = 300
+            btn = Button(text=str(i),size_hint_y=None, auto_width=False, height=dp(50))
+            btn.width = dp(300)
             btn.bind(on_release=lambda btn: self.maxlineupdropdown.select(btn.text))
             self.maxlineupdropdown.add_widget(btn)
         self.maxlineupdropdown.bind(on_select=lambda instance, x: setattr(self.ids.max_lineup_button, 'text', x))
@@ -97,7 +97,7 @@ class Root(FloatLayout):
                 players.append(line[1])
         self.ids.playerdisplay.clear_widgets()
 
-        headerbox= BoxLayout(orientation='horizontal', size_hint_x=1, size_hint_y=None, height=50)
+        headerbox= BoxLayout(orientation='horizontal', size_hint_x=1, size_hint_y=None, height=dp(50))
         headername = Label(text='[b]Name[/b]', markup=True, size_hint=(0.6,1), font_size='11sp', color=(0,0,0,1))
         headerbox.add_widget(headername)
         headerlock = Label(text='[b]Lock[/b]', markup=True, size_hint=(0.1,1), font_size='11sp', color=(0,0,0,1))
@@ -110,7 +110,7 @@ class Root(FloatLayout):
         players.pop(0)
         for player in players:
             prefix = player.replace(' ','')
-            playerbox = BoxLayout(orientation='horizontal', size_hint_x=1, size_hint_y=None, height=30)
+            playerbox = BoxLayout(orientation='horizontal', size_hint_x=1, size_hint_y=None, height=dp(30))
 
             playerlabel = Label(text=player, size_hint=(0.6,1), font_size='11sp', color=(0,0,0,1))
             playerlabel.bind(size=playerlabel.setter('text_size'))
