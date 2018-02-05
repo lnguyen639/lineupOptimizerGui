@@ -8,11 +8,11 @@ brew install python
 brew reinstall --build-bottle sdl2 sdl2_image sdl2_ttf sdl2_mixer gstreamer
 
 pip install Cython==0.26.1
-pip install -U kivy
-pip install -U pyinstaller
-pip install pyenchant
-pip install pyobjc
-pip install pydfs-lineup-optimizer
+pip install -U kivy==1.10.0
+pip install -U pyinstaller==3.3.1
+pip install pyenchant==2.0.0
+pip install pyobjc==4.1
+pip install pydfs-lineup-optimizer==1.1.2
 
 Edit pydfs-lineup-optimizer file for new solver
 
