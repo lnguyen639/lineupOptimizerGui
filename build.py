@@ -130,7 +130,6 @@ if args.setup:
     os.remove(lineup_optimizer_py)
     shutil.copyfile(newlineup_optimizer_py, lineup_optimizer_py)
 
-if not args.setup:
     #Build pkgdir with dist, build, and .spec file
     if os.path.exists(pkgdir):
         shutil.rmtree(pkgdir) 
