@@ -142,4 +142,4 @@ if args.setup:
     fix_spec_file(buildos)
 
 #Rebuild .spec and binaries
-subprocess.check_call('{} -m PyInstaller -y --clean --windowed {}'.format(envpython, specfile).split(), cwd=pkgdir)
+subprocess.check_call('{} -m PyInstaller -y --clean --windowed --onefile {}'.format(envpython, specfile).split(), cwd=pkgdir)
