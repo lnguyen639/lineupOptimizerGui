@@ -1,29 +1,31 @@
-#:kivy 1.1.0
-#: import Window kivy.core.window.Window
+<MyImage@Image>:
+    keep_ratio: False
+    allow_stretch: True
 
-#1,1,1 white
-#1,1,0 yellow
-#1,0,0 red
-#0,0,0 black
-Root:
-    canvas.before:
-        Color:
-            #rgb: 1,0,0 #red
-            #rgba: 255,255,255,0
-        Rectangle:
-            pos: self.pos
-            size: self.size
-            source: 'background.jpg'
+<MyTabbedPanel>:
+    do_default_tab: False
+    tab_width: (root.size[0] - 2 * self.strip_border[0])/4
+    MyTabbedPanelItem:
+        text: "Basketball"
+    MyTabbedPanelItem:
+        text: "Baseball"
+    MyTabbedPanelItem:
+        text: "Hockey"
+    MyTabbedPanelItem:
+        text: "Football"
 
+<MyTabbedPanelItem@TabbedPanelItem>:
+    text: 'Sport'
     BoxLayout:
         orientation: 'vertical'
         size: root.size
         pos: root.pos
-        #canvas:
-        #    Color:
-        #        rgb: 1, 1, 1 #white
-        #    Rectangle:
-        #        size: self.size
+        canvas:
+            Color:
+                rgb: 1, 1, 1 #white
+            Rectangle:
+                size: self.size
+                source: root.text + '.jpg'
 
         # 2 half views
         BoxLayout:
@@ -35,6 +37,7 @@ Root:
 
             # 1st Half view for list of players
             BoxLayout:
+                id: first_half_view
                 size_hint_x: 0.3
                 size_hint_y: 1
                 padding: [dp(5),dp(5),dp(5),dp(5)]
@@ -54,6 +57,14 @@ Root:
                     padding: [dp(5),dp(5),dp(5),dp(5)]
                     PlayerBoxLayout:
                         id: playerdisplay
+                        #canvas:
+                        #    opacity: 1
+                        #    Color:
+                        #        ##rgb: 211/255.0, 211/255.0, 211/255.0, 0.9 #red
+                        #        rgb: 1,1,1
+                        #    Rectangle:
+                        #        size: self.size
+                        #        pos: self.pos
 
             # 2nd Half view for scrolling results
             BoxLayout:
@@ -92,12 +103,6 @@ Root:
                 id: site_button
                 text: 'Site'
                 on_release: root.sitedropdown.open(self)
-
-            # Sport button
-            Button:
-                id: sport_button
-                text: 'Sport'
-                on_release: root.sportdropdown.open(self)
 
             # Max Lineup button
             Button:

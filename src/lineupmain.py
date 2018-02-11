@@ -1,7 +1,7 @@
-from pydfs_lineup_optimizer import Site, Sport, get_optimizer
+from kivy.uix.tabbedpanel import TabbedPanel
+from kivy.uix.tabbedpanel import TabbedPanelItem
+from pydfs_lineup_optimizer import get_optimizer
 from pulp.solvers import COIN_CMD
-import os
-import kivy
 import threading
 from functools import partial
 
@@ -13,19 +13,14 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
-from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.textinput import TextInput
 from kivy.graphics import Color, Rectangle
-from kivy.clock import Clock
 from kivy.logger import Logger
-from kivy.metrics import dp,sp
+from kivy.metrics import dp
 
 import os
-
-class MyApp(App):
-    title = "Fantasy Sports Lineup Optimizer"
 
 class PlayerBoxLayout(BoxLayout):
     def __init__(self, **kwargs):
@@ -41,13 +36,15 @@ class LoadDialog(FloatLayout):
     load = ObjectProperty(None)
     cancel = ObjectProperty(None)
 
-class Root(FloatLayout):
-    loadfile = ObjectProperty(None)
-    text_input = ObjectProperty(None)
+# Whatever declared in kv file will overwrite
+class MyTabbedPanel(TabbedPanel):
+    pass
 
-    def __init__(self):
-        super(Root,self).__init__()
-        self.playersconfig = {}
+
+class MyTabbedPanelItem(TabbedPanelItem):
+    def __init__(self, **kwargs):
+        super(MyTabbedPanelItem, self).__init__(**kwargs)
+        playersconfig = {}
         self.sitedropdown = DropDown(auto_width=False)
         self.sitedropdown.width = dp(300)
         for site in ['DRAFTKINGS','FANDUEL','YAHOO','FANTASY_DRAFT']:
@@ -57,17 +54,6 @@ class Root(FloatLayout):
             self.sitedropdown.add_widget(btn)
         self.sitedropdown.bind(on_select=lambda instance, x: setattr(self.ids.site_button, 'text', x))
 
-        self.sportdropdown = DropDown(auto_width=False)
-        self.sportdropdown.width = dp(300)
-        for sport in ['BASKETBALL','']:
-            btn = Button(text=sport,size_hint_y=None, auto_width=False, height=dp(50))
-            btn.width = dp(300)
-            #Hack to position button just right, remove if when enable more sports
-            if sport != '':
-                btn.bind(on_release=lambda btn: self.sportdropdown.select(btn.text))
-            self.sportdropdown.add_widget(btn)
-        self.sportdropdown.bind(on_select=lambda instance, x: setattr(self.ids.sport_button, 'text', x))
-
         self.maxlineupdropdown = DropDown(auto_width=False)
         self.maxlineupdropdown.width = dp(300)
         for i in range(1,11):
@@ -76,9 +62,6 @@ class Root(FloatLayout):
             btn.bind(on_release=lambda btn: self.maxlineupdropdown.select(btn.text))
             self.maxlineupdropdown.add_widget(btn)
         self.maxlineupdropdown.bind(on_select=lambda instance, x: setattr(self.ids.max_lineup_button, 'text', x))
-
-    def dismiss_popup(self):
-        self._popup.dismiss()
 
     def show_load(self):
         content = LoadDialog(load=self.load, cancel=self.dismiss_popup)
@@ -95,7 +78,8 @@ class Root(FloatLayout):
             content = csv.reader(csv_file)
             for line in content:
                 players.append(line[1])
-        self.ids.playerdisplay.clear_widgets()
+        playerdisplay = self.ids.playerdisplay
+        playerdisplay.clear_widgets()
 
         headerbox= BoxLayout(orientation='horizontal', size_hint_x=1, size_hint_y=None, height=dp(50))
         headername = Label(text='[b]Name[/b]', markup=True, size_hint=(0.6,1), font_size='11sp', color=(0,0,0,1))
@@ -104,30 +88,43 @@ class Root(FloatLayout):
         headerbox.add_widget(headerlock)
         headerexposure = Label(text='[b]Exposure[/b]', markup=True, size_hint=(0.4,1), font_size='11sp', color=(0,0,0,1))
         headerbox.add_widget(headerexposure)
-        self.ids.playerdisplay.add_widget(headerbox)
+        playerdisplay.add_widget(headerbox)
 
         #Remove header in players list
         players.pop(0)
         for player in players:
             prefix = player.replace(' ','')
             playerbox = BoxLayout(orientation='horizontal', size_hint_x=1, size_hint_y=None, height=dp(30))
-
             playerlabel = Label(text=player, size_hint=(0.6,1), font_size='11sp', color=(0,0,0,1))
             playerlabel.bind(size=playerlabel.setter('text_size'))
             playerbox.add_widget(playerlabel)
-
             lockcheckbox = CheckBox(size_hint=(0.1,1), id=prefix+'lock')
             playerbox.add_widget(lockcheckbox)
-
             exposureinput = TextInput(text='0 %',multiline=False, size_hint=(0.4,1), font_size='9sp', id=prefix+'exposure')
             playerbox.add_widget(exposureinput)
-
-            self.ids.playerdisplay.add_widget(playerbox)
+            playerdisplay.add_widget(playerbox)
+        playerdisplay.canvas.before.add(Color(211/255.0, 211/255.0, 211/255.0, 0.9)) #grey
+        playerdisplay.rect = Rectangle()
+        playerdisplay.bind(size=lambda i, size: setattr(i.rect,'size', size),pos= lambda i, pos: setattr(i.rect,"pos",pos))
+        playerdisplay.canvas.before.add(playerdisplay.rect) #grey
         self.dismiss_popup()
+
+    def dismiss_popup(self):
+        self._popup.dismiss()
+
+    def show_output(self):
+        content = Label(text='Please Wait...')
+        self._popup = Popup(title="App is Processing", content=content, size_hint=(0.9,0.9))
+        self._popup.open()
+        mythread = threading.Thread(target=partial(self.get_liner))
+        mythread.start()
 
     def get_liner(self):
         site=self.ids.site_button.text
-        sport=self.ids.sport_button.text
+        sport=self.text.upper()
+        #debug
+        sport='BASKETBALL'
+        #end debug
         maxlineup=self.ids.max_lineup_button.text
         ##debug
         #site='DRAFTKINGS'
@@ -174,7 +171,7 @@ class Root(FloatLayout):
         #For real
         outputtext='\n'
         for lineup in lineup_generator:
-             outputtext += "{}\n\n".format(str(lineup))
+            outputtext += "{}\n\n".format(str(lineup))
         self.get_canvas(outputtext)
 
     def get_canvas(self, outputtext=None):
@@ -184,15 +181,13 @@ class Root(FloatLayout):
         self.ids.secondhalfview.canvas.before.children.insert(0,Color(211/255.0, 211/255.0, 211/255.0, 0.9)) #grey
         self.dismiss_popup()
 
-    def show_output(self):
-        content = Label(text='Please Wait...')
-        self._popup = Popup(title="App is Processing", content=content, size_hint=(0.9,0.9))
-        self._popup.open()
-        mythread = threading.Thread(target=partial(self.get_liner))
-        mythread.start()
 
-Factory.register('Root', cls=Root)
-Factory.register('LoadDialog', cls=LoadDialog)
+class LineupApp(App):
+    def build(self):
+        return MyTabbedPanel()
+
+
+Factory.register('MyTabbedPanelItem', cls=MyTabbedPanelItem)
 
 if __name__ == '__main__':
-    MyApp().run()
+    LineupApp().run()
