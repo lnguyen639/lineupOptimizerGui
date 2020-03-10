@@ -3,6 +3,10 @@ KIVY basics:
 https://kivy.org/docs/guide/lang.html
 
 =============
+Demo
+https://www.youtube.com/watch?v=_CAivqEBVno&list=PLkOPRqhj55hOGwfxKhIs0PyKpj-XknUx4&index=6
+
+=============
 Mac
 
 virtualenv -p /usr/local/bin/python2.7 virtualenv-pydfs
@@ -30,6 +34,7 @@ pyinstaller -y --clean --windowed lineupOptGuiMacPkg.spec
 
 Edit specs:
 coll = COLLECT(exe, Tree('../lineupOptGui'),
+
 ===============
 Windows
 
@@ -52,4 +57,3 @@ from kivy.deps import sdl2, glew
                *[Tree(p) for p in (sdl2.dep_bins + glew.dep_bins)],
 
 cbc from https://www.coin-or.org/download/binary/Cbc/
-
